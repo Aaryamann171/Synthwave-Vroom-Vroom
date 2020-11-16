@@ -35,8 +35,8 @@ logo = pygame.image.load("assets/logo.jpg")
 level_up_msgs = ["Nice Going", "ZOOOM ZOOOM", "Hit the nozzz bruh",
                  "oops! roadkill", "Eyes on the road", "Hit the nozz bruh", "oops! roadkill", "almost there", "we going too fast boi", "WOOAHH"]
 
-with open('hs.txt') as f:
-    hs = f.readline().strip()
+with open('highscore.txt') as f:
+    highscore = f.readline().strip()
 
 def intro():
     intro = True
@@ -59,7 +59,7 @@ def intro():
                         display_width / 2, display_height / 2)
         message_display("Vroom! Vroom!", 30,
                         display_width/2, display_height/2 + 70)
-        message_display("Highest Score: "+hs, 30,
+        message_display("Highest Score: " + highscore, 30,
                         display_width/2, display_height/2 + 200)
         gameDisplay.blit(logo, ((display_width / 2) - 100, 10))
 
@@ -90,7 +90,7 @@ def intro():
 
 
 
-def highscore(count):
+def curr_score(count):
     font = pygame.font.SysFont("Arial", 40)
     text = font.render("Score : " + str(count), True, white)
     gameDisplay.blit(text, (0, 0))
@@ -200,13 +200,13 @@ def gameloop():
         car_x += car_x_change
 
         if car_x > road_end_x - car_width:
-            if count > int(hs):
-                with open('hs.txt', "w") as f:
+            if count > int(highscore):
+                with open('highscore.txt', "w") as f:
                     f.write(str(count))
             crash(car_x, car_y)
         if car_x < road_start_x:
-            if count > int(hs):
-                with open('hs.txt', "w") as f:
+            if count > int(highscore):
+                with open('highscore.txt', "w") as f:
                     f.write(str(count))
             crash(car_x - car_width, car_y)
 
@@ -223,7 +223,7 @@ def gameloop():
         gameDisplay.blit(logo, (690, (display_height / 2) - 100))
         car(car_x, car_y)
         draw_things(thing_startx, thing_starty, car2Img)
-        highscore(count)
+        curr_score(count)
         count += 1
         thing_starty += thing_speed
 
