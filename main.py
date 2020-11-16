@@ -6,10 +6,12 @@ from pygame.locals import *
 pygame.mixer.init()
 pygame.mixer.music.load('assets/music.mp3')
 pygame.mixer.music.play()
+
 pygame.init()
 display_width = 800
 display_height = 600
 
+# outrun inspired color scheme
 bg = (13, 2, 33)
 white = (236, 239, 244)
 green = (77, 164, 166)
@@ -82,7 +84,7 @@ def intro():
                         2, menu2_y + menu_height / 2)
 
         pygame.display.update()
-        clock.tick(50)
+        clock.tick(30)
 
 
 def highscore(count):
@@ -91,15 +93,15 @@ def highscore(count):
     gameDisplay.blit(text, (0, 0))
     level = count/1000 + 1
     if level == 1:
-        message_display("Level 1", 60, display_width -
-                        120, 100)
+        message_display("Level 1", 60,
+                        680, 100)
         pygame.display.update()
 
     else:
         message_display("Level "+str(level), 60,
                         display_width - 120, 100)
-        message_display(level_up_msgs[level-2], 20, display_width -
-                        120, 160)
+        message_display(level_up_msgs[level-2], 20,
+                        680, 160)
     if count > 10000:
         message_display("Congratulations You Won!", 60,
                         display_width / 2, display_height / 2)
@@ -153,7 +155,6 @@ def get_speed(count):
 
 
 def gameloop():
-    # pygame.mixer.music.play(-1)
     bg_x1 = (display_width / 2) - (360 / 2)
     bg_x2 = (display_width / 2) - (360 / 2)
     bg_y1 = 0
@@ -209,8 +210,7 @@ def gameloop():
         gameDisplay.blit(bgImg, (bg_x1, bg_y1))
         gameDisplay.blit(bgImg, (bg_x2, bg_y2))
         gameDisplay.blit(logo, (10, (display_height / 2) - 100))
-        gameDisplay.blit(logo, (display_width - 200 -
-                                10, (display_height / 2) - 100))
+        gameDisplay.blit(logo, (690, (display_height / 2) - 100))
         car(car_x, car_y)
         draw_things(thing_startx, thing_starty, car2Img)
         highscore(count)
