@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 
 pygame.mixer.init()
-pygame.mixer.music.load('music.mp3')
+pygame.mixer.music.load('assets/music.mp3')
 pygame.mixer.music.play()
 pygame.init()
 display_width = 800
@@ -24,11 +24,14 @@ pygame.display.set_caption("Synthwave")
 clock = pygame.time.Clock()
 
 
-carImg = pygame.image.load("car1.png")
-car2Img = pygame.image.load("car2.png")
-bgImg = pygame.image.load("grid.png")
-crash_img = pygame.image.load("crash.png")
-logo = pygame.image.load("logo.jpg")
+carImg = pygame.image.load("assets/car1.png")
+car2Img = pygame.image.load("assets/car2.png")
+bgImg = pygame.image.load("assets/grid.png")
+crash_img = pygame.image.load("assets/crash.png")
+logo = pygame.image.load("assets/logo.jpg")
+
+level_up_msgs = ["Nice Going", "ZOOOM ZOOOM", "Hit the nozzz bruh",
+                 "oops! roadkill", "Eyes on the road", "Hit the nozz bruh", "oops! roadkill", "almost there", "we going too fast boi"]
 
 
 def intro():
@@ -86,36 +89,18 @@ def highscore(count):
     font = pygame.font.SysFont("Arial", 40)
     text = font.render("Score : " + str(count), True, white)
     gameDisplay.blit(text, (0, 0))
-    if count > 1000 and count < 1200:
-        message_display("Level 2", 60, display_width / 2, display_height / 2)
+    level = count/1000 + 1
+    if level == 1:
+        message_display("Level 1", 60, display_width -
+                        120, 100)
         pygame.display.update()
-    elif count > 2000 and count < 2200:
-        message_display("Level 3", 60, display_width / 2, display_height / 2)
-        message_display("Nice Skills", 60, display_width /
-                        2, display_height / 2 + 100)
-    elif count > 3000 and count < 3200:
-        message_display("Level 4", 60, display_width / 2, display_height / 2)
-    elif count > 4000 and count < 4200:
-        message_display("Level 5", 60, display_width / 2, display_height / 2)
-        message_display("Keep Going!", 60, display_width /
-                        2, display_height / 2 + 100)
-    elif count > 5000 and count < 5200:
-        message_display("Level 6", 60, display_width / 2, display_height / 2)
-        message_display("The road is now narrower", 60,
-                        display_width / 2, display_height / 2 + 100)
-    elif count > 6000 and count < 6200:
-        message_display("Level 7", 60, display_width / 2, display_height / 2)
-    elif count > 7000 and count < 7200:
-        message_display("Level 8", 60, display_width / 2, display_height / 2)
-        message_display("WOAAH!", 60, display_width /
-                        2, display_height / 2 + 100)
-    elif count > 8000 and count < 8200:
-        message_display("Level 9", 60, display_width / 2, display_height / 2)
-        message_display("Almost there!", 60, display_width /
-                        2, display_height / 2 + 100)
-    elif count > 9000 and count < 9200:
-        message_display("Level 10", 60, display_width / 2, display_height / 2)
-    elif count > 10000:
+
+    else:
+        message_display("Level "+str(level), 60,
+                        display_width - 120, 100)
+        message_display(level_up_msgs[level-2], 20, display_width -
+                        120, 160)
+    if count > 10000:
         message_display("Congratulations You Won!", 60,
                         display_width / 2, display_height / 2)
         pygame.display.update()
@@ -152,6 +137,19 @@ def crash(x, y):
     pygame.display.update()
     time.sleep(2)
     gameloop()
+
+
+def get_speed(count):
+    speed = 5
+    if count > 1000 and count <= 5000:
+        speed += count/1000
+    elif count > 5000 and count <= 6000:
+        speed = 10
+    elif count > 6000 and count <= 9000:
+        speed = 10 + (count - 5000)/2000
+    elif count > 9000:
+        speed = 12
+    return speed
 
 
 def gameloop():
@@ -233,28 +231,11 @@ def gameloop():
         if bg_y2 >= display_height:
             bg_y2 = -600
 
-        thing_speed = 5
+        thing_speed = get_speed(count)
 
-        if count > 2000:
-            thing_speed = 7
-        if count > 3000:
-            thing_speed = 8
-        if count > 4000:
-            thing_speed = 9
-        if count > 5000:
-            thing_speed = 10
-        if count > 6000:
-            thing_speed = 10.5
-        if count > 7000:
-            thing_speed = 11
-        if count > 8000:
-            thing_speed = 11.5
-        if count > 9000:
-            thing_speed = 12
-
-        if count > 5000:
-            road_start_x = (display_width/2) - 25
-            road_end_x = (display_width/2) + 25
+        # if count > 5000:
+        #     road_start_x = (display_width/2) - 25
+        #     road_end_x = (display_width/2) + 25
 
         pygame.display.update()
         clock.tick(100)
