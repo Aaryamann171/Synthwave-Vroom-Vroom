@@ -1,41 +1,44 @@
+import random
+import time
 import pygame
 from pygame.locals import *
 
-import time
-import random
-
+pygame.mixer.init()
+pygame.mixer.music.load('music.mp3')
+pygame.mixer.music.play()
 pygame.init()
 display_width = 800
 display_height = 600
 
-black = (0, 0, 0)
-white = (255, 255, 255)
-green = (0, 255, 0)
-red = (255, 0, 0)
-blue = (0, 0, 255)
+bg = (13, 2, 33)
+white = (236, 239, 244)
+green = (77, 164, 166)
+red = (255, 56, 100)
+blue = (94, 129, 172)
+cyan = (45, 226, 230)
 
 car_width = 50
 car_height = 100
-# pygame.mixer.music.load("Highway_to_hell.mp3")
 gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption("Car Racing Game")
+pygame.display.set_caption("Synthwave")
 clock = pygame.time.Clock()
 
 
 carImg = pygame.image.load("car1.png")
 car2Img = pygame.image.load("car2.png")
-bgImg = pygame.image.load("back2.jpg")
+bgImg = pygame.image.load("grid.png")
 crash_img = pygame.image.load("crash.png")
-logo = pygame.image.load("logo.png")
+logo = pygame.image.load("logo.jpg")
 
 
 def intro():
     intro = True
-    menu1_x = 200
+    menu1_x = 140
     menu1_y = 400
-    menu2_x = 500
+    menu2_x = 460
     menu2_y = 400
-    menu_width = 100
+    menu1_width = 80
+    menu2_width = 120
     menu_height = 50
     while intro:
         for event in pygame.event.get():
@@ -44,35 +47,35 @@ def intro():
                 quit()
         pygame.display.set_icon(carImg)
 
-        pygame.draw.rect(gameDisplay, black, (200, 400, 100, 50))
-        pygame.draw.rect(gameDisplay, black, (500, 400, 100, 50))
+        # pygame.draw.rect(gameDisplay, bg, (200, 400, 100, 50))
+        # pygame.draw.rect(gameDisplay, bg, (460, 400, 180, 50))
 
-        gameDisplay.fill(black)
-        message_display("CAR RACING PROJECT", 65,
+        gameDisplay.fill(bg)
+        message_display("Synthave", 65,
                         display_width / 2, display_height / 2)
-        message_display("By Aaryamann and Ananya", 30,
+        message_display("Vroom! Vroom!", 30,
                         display_width/2, display_height/2 + 70)
-        message_display("S1", 45, display_width / 2, display_height / 2 + 130)
         gameDisplay.blit(logo, ((display_width / 2) - 100, 10))
-        pygame.draw.rect(gameDisplay, green, (200, 400, 100, 50))
-        pygame.draw.rect(gameDisplay, red, (500, 400, 100, 50))
+
+        pygame.draw.rect(gameDisplay, green, (140, 400, 220, 50))
+        pygame.draw.rect(gameDisplay, red, (460, 400, 180, 50))
 
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
-        if menu1_x < mouse[0] < menu1_x + menu_width and menu1_y < mouse[1] < menu1_y + menu_height:
-            pygame.draw.rect(gameDisplay, blue, (200, 400, 100, 50))
+        if menu1_x < mouse[0] < menu1_x + menu1_width + 130 and menu1_y < mouse[1] < menu1_y + menu_height:
+            pygame.draw.rect(gameDisplay, cyan, (140, 400, 220, 50))
             if click[0] == 1:
                 intro = False
-        if menu2_x < mouse[0] < menu2_x + menu_width and menu2_y < mouse[1] < menu2_y + menu_height:
-            pygame.draw.rect(gameDisplay, blue, (500, 400, 100, 50))
+        if menu2_x < mouse[0] < menu2_x + menu2_width + 60 and menu2_y < mouse[1] < menu2_y + menu_height:
+            pygame.draw.rect(gameDisplay, cyan, (460, 400, 180, 50))
             if click[0] == 1:
                 pygame.quit()
                 quit()
 
-        message_display("Start", 40, menu1_x + menu_width /
+        message_display("Vroom Now", 40, menu1_x + 70 + menu1_width /
                         2, menu1_y + menu_height / 2)
-        message_display("Quit", 40, menu2_x + menu_width /
+        message_display("Run Away", 40, menu2_x + 30 + menu2_width /
                         2, menu2_y + menu_height / 2)
 
         pygame.display.update()
@@ -80,7 +83,7 @@ def intro():
 
 
 def highscore(count):
-    font = pygame.font.SysFont(None, 55)
+    font = pygame.font.SysFont("Arial", 40)
     text = font.render("Score : " + str(count), True, white)
     gameDisplay.blit(text, (0, 0))
     if count > 1000 and count < 1200:
@@ -134,7 +137,7 @@ def text_objects(text, font):
 
 
 def message_display(text, size, x, y):
-    font = pygame.font.Font("freesansbold.ttf", size)
+    font = pygame.font.SysFont("Roboto", size)
     text_surface, text_rectangle = text_objects(text, font)
     text_rectangle.center = (x, y)
     gameDisplay.blit(text_surface, text_rectangle)
@@ -204,7 +207,7 @@ def gameloop():
             if car_x + car_width >= thing_startx and car_x + car_width <= thing_startx + thingw:
                 crash(car_x, car_y - car_height / 2)
 
-        gameDisplay.fill(black)
+        gameDisplay.fill(bg)
         gameDisplay.blit(bgImg, (bg_x1, bg_y1))
         gameDisplay.blit(bgImg, (bg_x2, bg_y2))
         gameDisplay.blit(logo, (10, (display_height / 2) - 100))
@@ -230,8 +233,8 @@ def gameloop():
         if bg_y2 >= display_height:
             bg_y2 = -600
 
-        if count > 1000:
-            thing_speed = 5
+        thing_speed = 5
+
         if count > 2000:
             thing_speed = 7
         if count > 3000:
@@ -248,9 +251,11 @@ def gameloop():
             thing_speed = 11.5
         if count > 9000:
             thing_speed = 12
+
         if count > 5000:
             road_start_x = (display_width/2) - 25
             road_end_x = (display_width/2) + 25
+
         pygame.display.update()
         clock.tick(100)
 
