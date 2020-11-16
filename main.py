@@ -33,8 +33,10 @@ crash_img = pygame.image.load("assets/crash.png")
 logo = pygame.image.load("assets/logo.jpg")
 
 level_up_msgs = ["Nice Going", "ZOOOM ZOOOM", "Hit the nozzz bruh",
-                 "oops! roadkill", "Eyes on the road", "Hit the nozz bruh", "oops! roadkill", "almost there", "we going too fast boi"]
+                 "oops! roadkill", "Eyes on the road", "Hit the nozz bruh", "oops! roadkill", "almost there", "we going too fast boi", "WOOAHH"]
 
+with open('hs.txt') as f:
+    hs = f.readline().strip()
 
 def intro():
     intro = True
@@ -52,14 +54,13 @@ def intro():
                 quit()
         pygame.display.set_icon(carImg)
 
-        # pygame.draw.rect(gameDisplay, bg, (200, 400, 100, 50))
-        # pygame.draw.rect(gameDisplay, bg, (460, 400, 180, 50))
-
         gameDisplay.fill(bg)
         message_display("Synthave", 65,
                         display_width / 2, display_height / 2)
         message_display("Vroom! Vroom!", 30,
                         display_width/2, display_height/2 + 70)
+        message_display("Highest Score: "+hs, 30,
+                        display_width/2, display_height/2 + 200)
         gameDisplay.blit(logo, ((display_width / 2) - 100, 10))
 
         pygame.draw.rect(gameDisplay, green, (140, 400, 220, 50))
@@ -84,7 +85,9 @@ def intro():
                         2, menu2_y + menu_height / 2)
 
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(60)
+    gameloop()
+
 
 
 def highscore(count):
@@ -107,7 +110,7 @@ def highscore(count):
                         display_width / 2, display_height / 2)
         pygame.display.update()
         time.sleep(2)
-        gameloop()
+        intro()
 
 
 def draw_things(thingx, thingy, thing):
@@ -138,13 +141,13 @@ def crash(x, y):
                     2, display_height / 2 + 100)
     pygame.display.update()
     time.sleep(2)
-    gameloop()
+    intro()
 
 
 def get_speed(count):
     speed = 5
     if count > 1000 and count <= 5000:
-        speed += count/1000
+        speed = 5 + count/1000
     elif count > 5000 and count <= 6000:
         speed = 10
     elif count > 6000 and count <= 9000:
@@ -155,11 +158,13 @@ def get_speed(count):
 
 
 def gameloop():
+    count = 0
+    thing_speed = get_speed(count)
+
     bg_x1 = (display_width / 2) - (360 / 2)
     bg_x2 = (display_width / 2) - (360 / 2)
     bg_y1 = 0
     bg_y2 = -600
-    bg_speed = 6
     bg_speed_change = 0
     car_x = ((display_width / 2) - (car_width / 2))
     car_y = (display_height - car_height)
@@ -171,12 +176,11 @@ def gameloop():
     thing_starty = -600
     thingw = 50
     thingh = 100
-    thing_speed = 3
-    count = 0
     gameExit = False
 
     while not gameExit:
 
+        bg_speed = get_speed(count) + 3
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameExit = True
@@ -196,8 +200,14 @@ def gameloop():
         car_x += car_x_change
 
         if car_x > road_end_x - car_width:
+            if count > int(hs):
+                with open('hs.txt', "w") as f:
+                    f.write(str(count))
             crash(car_x, car_y)
         if car_x < road_start_x:
+            if count > int(hs):
+                with open('hs.txt', "w") as f:
+                    f.write(str(count))
             crash(car_x - car_width, car_y)
 
         if car_y < thing_starty + thingh:
@@ -224,6 +234,7 @@ def gameloop():
 
         bg_y1 += bg_speed
         bg_y2 += bg_speed
+        thing_speed = get_speed(count)
 
         if bg_y1 >= display_height:
             bg_y1 = -600
@@ -231,15 +242,11 @@ def gameloop():
         if bg_y2 >= display_height:
             bg_y2 = -600
 
-        thing_speed = get_speed(count)
-
         # if count > 5000:
         #     road_start_x = (display_width/2) - 25
         #     road_end_x = (display_width/2) + 25
 
         pygame.display.update()
-        clock.tick(100)
-
+        clock.tick(60)
 
 intro()
-gameloop()
