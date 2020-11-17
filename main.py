@@ -35,8 +35,12 @@ logo = pygame.image.load("assets/logo.jpg")
 level_up_msgs = ["Nice Going", "ZOOOM ZOOOM", "Hit the nozzz bruh",
                  "oops! roadkill", "Eyes on the road", "Hit the nozz bruh", "oops! roadkill", "almost there", "we going too fast boi", "WOOAHH"]
 
+# reads highscore from first line of the file
 with open('highscore.txt') as f:
     highscore = f.readline().strip()
+    # highscore is taken as 0 if  the file is empty
+    if not highscore:
+        highscore = "0"
 
 def intro():
     intro = True
@@ -55,12 +59,9 @@ def intro():
         pygame.display.set_icon(carImg)
 
         gameDisplay.fill(bg)
-        message_display("Synthave", 65,
-                        display_width / 2, display_height / 2)
-        message_display("Vroom! Vroom!", 30,
-                        display_width/2, display_height/2 + 70)
-        message_display("Highest Score: " + highscore, 30,
-                        display_width/2, display_height/2 + 200)
+        message_display("Synthave", 65, display_width / 2, display_height / 2)
+        message_display("Vroom! Vroom!", 30, display_width/2, display_height/2 + 70)
+        message_display("Highest Score: " + highscore, 30, display_width/2, display_height/2 + 200)
         gameDisplay.blit(logo, ((display_width / 2) - 100, 10))
 
         pygame.draw.rect(gameDisplay, green, (140, 400, 220, 50))
@@ -73,21 +74,20 @@ def intro():
             pygame.draw.rect(gameDisplay, cyan, (140, 400, 220, 50))
             if click[0] == 1:
                 intro = False
+
         if menu2_x < mouse[0] < menu2_x + menu2_width + 60 and menu2_y < mouse[1] < menu2_y + menu_height:
             pygame.draw.rect(gameDisplay, cyan, (460, 400, 180, 50))
             if click[0] == 1:
                 pygame.quit()
                 quit()
 
-        message_display("Vroom Now", 40, menu1_x + 70 + menu1_width /
-                        2, menu1_y + menu_height / 2)
-        message_display("Run Away", 40, menu2_x + 30 + menu2_width /
-                        2, menu2_y + menu_height / 2)
+        message_display("Vroom Now", 40, menu1_x + 70 + menu1_width/2, menu1_y + menu_height/2)
+        message_display("Run Away", 40, menu2_x + 30 + menu2_width/2, menu2_y + menu_height/2)
 
         pygame.display.update()
         clock.tick(60)
-    gameloop()
 
+    gameloop()
 
 
 def curr_score(count):
@@ -95,19 +95,16 @@ def curr_score(count):
     text = font.render("Score : " + str(count), True, white)
     gameDisplay.blit(text, (0, 0))
     level = count/1000 + 1
+
     if level == 1:
-        message_display("Level 1", 60,
-                        680, 100)
+        message_display("Level 1", 60, 680, 100)
         pygame.display.update()
 
     else:
-        message_display("Level "+str(level), 60,
-                        display_width - 120, 100)
-        message_display(level_up_msgs[level-2], 20,
-                        680, 160)
+        message_display("Level "+str(level), 60, display_width - 120, 100)
+        message_display(level_up_msgs[level-2], 20, 680, 160)
     if count > 10000:
-        message_display("Congratulations You Won!", 60,
-                        display_width / 2, display_height / 2)
+        message_display("Congratulations You Won!", 60, display_width/2, display_height/2)
         pygame.display.update()
         time.sleep(2)
         intro()
@@ -135,10 +132,8 @@ def message_display(text, size, x, y):
 
 def crash(x, y):
     gameDisplay.blit(crash_img, (x, y))
-    message_display("You Crashed!", 115, display_width /
-                    2, display_height / 2 - 100)
-    message_display("GAME OVER", 115, display_width /
-                    2, display_height / 2 + 100)
+    message_display("You Crashed!", 115, display_width/2, display_height/2 - 100)
+    message_display("GAME OVER", 115, display_width/2, display_height/2 + 100)
     pygame.display.update()
     time.sleep(2)
     intro()
@@ -147,7 +142,7 @@ def crash(x, y):
 def get_speed(count):
     speed = 5
     if count > 1000 and count <= 5000:
-        speed = 5 + count/1000
+        speed += count/1000
     elif count > 5000 and count <= 6000:
         speed = 10
     elif count > 6000 and count <= 9000:
@@ -156,6 +151,11 @@ def get_speed(count):
         speed = 12
     return speed
 
+
+def update_highscore(count):
+    if count > int(highscore):
+        with open('highscore.txt', "w") as f:
+            f.write(str(count))
 
 def gameloop():
     count = 0
@@ -200,20 +200,19 @@ def gameloop():
         car_x += car_x_change
 
         if car_x > road_end_x - car_width:
-            if count > int(highscore):
-                with open('highscore.txt', "w") as f:
-                    f.write(str(count))
+            update_highscore(count)
             crash(car_x, car_y)
+
         if car_x < road_start_x:
-            if count > int(highscore):
-                with open('highscore.txt', "w") as f:
-                    f.write(str(count))
+            update_highscore(count)
             crash(car_x - car_width, car_y)
 
         if car_y < thing_starty + thingh:
             if car_x >= thing_startx and car_x <= thing_startx + thingw:
+                update_highscore(count)
                 crash(car_x - 25, car_y - car_height / 2)
             if car_x + car_width >= thing_startx and car_x + car_width <= thing_startx + thingw:
+                update_highscore(count)
                 crash(car_x, car_y - car_height / 2)
 
         gameDisplay.fill(bg)
