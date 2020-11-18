@@ -25,9 +25,8 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption("Synthwave")
 clock = pygame.time.Clock()
 
-
-carImg = pygame.image.load("assets/car1.png")
-car2Img = pygame.image.load("assets/car2.png")
+carImg = pygame.image.load("assets/car.png")
+car2Img = pygame.image.load("assets/taxi.png")
 bgImg = pygame.image.load("assets/grid.png")
 crash_img = pygame.image.load("assets/crash.png")
 logo = pygame.image.load("assets/logo.jpg")
@@ -41,6 +40,7 @@ with open('highscore.txt') as f:
     # highscore is taken as 0 if  the file is empty
     if not highscore:
         highscore = "0"
+
 
 def intro():
     intro = True
@@ -157,6 +157,7 @@ def update_highscore(count):
         with open('highscore.txt', "w") as f:
             f.write(str(count))
 
+
 def gameloop():
     count = 0
     thing_speed = get_speed(count)
@@ -218,8 +219,8 @@ def gameloop():
         gameDisplay.fill(bg)
         gameDisplay.blit(bgImg, (bg_x1, bg_y1))
         gameDisplay.blit(bgImg, (bg_x2, bg_y2))
-        gameDisplay.blit(logo, (10, (display_height / 2) - 100))
-        gameDisplay.blit(logo, (690, (display_height / 2) - 100))
+        # gameDisplay.blit(logo, (10, (display_height / 2) - 100))
+        # gameDisplay.blit(logo, (690, (display_height / 2) - 100))
         car(car_x, car_y)
         draw_things(thing_startx, thing_starty, car2Img)
         curr_score(count)
