@@ -1,5 +1,5 @@
 # Synthwave - Vroom! Vroom!
-##### Car Driving game developed in python using **Pygame module**
+### Car Driving game developed in python using **Pygame module**
 * level up after every 1k points
 * speed increases after every level, making it harder to dodge the obstacles
 * vibe to copy right free synthwave music
