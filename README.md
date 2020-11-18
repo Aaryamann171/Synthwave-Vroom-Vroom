@@ -8,7 +8,7 @@
 ![homescreen](assets/homescreen.png)
 
 ### Requirements
-* python 2
+* python 2+
 * pygame 1.9.6+
 
 ### How to run
