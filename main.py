@@ -29,7 +29,7 @@ carImg = pygame.image.load("assets/car.png")
 car2Img = pygame.image.load("assets/taxi.png")
 bgImg = pygame.image.load("assets/grid.png")
 crash_img = pygame.image.load("assets/crash.png")
-logo = pygame.image.load("assets/logo.jpg")
+logo = pygame.image.load("assets/logo.png")
 
 level_up_msgs = ["Nice Going", "ZOOOM ZOOOM", "Hit the nozzz bruh",
                  "oops! roadkill", "Eyes on the road", "Hit the nozz bruh", "oops! roadkill", "almost there", "we going too fast boi", "WOOAHH"]
@@ -59,10 +59,11 @@ def intro():
         pygame.display.set_icon(carImg)
 
         gameDisplay.fill(bg)
-        message_display("Synthave", 65, display_width / 2, display_height / 2)
-        message_display("Vroom! Vroom!", 30, display_width/2, display_height/2 + 70)
+        # message_display("Synthave", 65, display_width / 2, display_height / 2)
+        message_display("A driving game with chill vibes", 30, display_width/2, display_height/2 + 50)
         message_display("Highest Score: " + highscore, 30, display_width/2, display_height/2 + 200)
-        gameDisplay.blit(logo, ((display_width / 2) - 100, 10))
+        # gameDisplay.blit(logo, ((display_width / 2) - 100, 10))
+        gameDisplay.blit(logo, (display_width/2 - 180, 0))
 
         pygame.draw.rect(gameDisplay, green, (140, 400, 220, 50))
         pygame.draw.rect(gameDisplay, red, (460, 400, 180, 50))
@@ -104,6 +105,7 @@ def curr_score(count):
         message_display("Level "+str(level), 60, display_width - 120, 100)
         message_display(level_up_msgs[level-2], 20, 680, 160)
     if count > 10000:
+        update_highscore(count)
         message_display("Congratulations You Won!", 60, display_width/2, display_height/2)
         pygame.display.update()
         time.sleep(2)
