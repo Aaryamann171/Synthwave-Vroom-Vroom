@@ -5,7 +5,7 @@ from pygame.locals import *
 
 pygame.mixer.init()
 pygame.mixer.music.load('assets/music.mp3')
-pygame.mixer.music.play()
+pygame.mixer.music.play(-1) # plays music on loop
 
 pygame.init()
 display_width = 800
