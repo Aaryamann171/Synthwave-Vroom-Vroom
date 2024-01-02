@@ -5,7 +5,7 @@ from pygame.locals import *
 
 pygame.mixer.init()
 pygame.mixer.music.load('assets/music.mp3')
-pygame.mixer.music.play(-1) # plays music on loop
+pygame.mixer.music.play(-1)  # plays music on loop
 
 pygame.init()
 display_width = 800
@@ -31,8 +31,18 @@ bgImg = pygame.image.load("assets/grid.png")
 crash_img = pygame.image.load("assets/crash.png")
 logo = pygame.image.load("assets/logo.png")
 
-level_up_msgs = ["Nice Going", "ZOOOM ZOOOM", "Hit the nozzz bruh",
-                 "oops! roadkill", "Eyes on the road", "Hit the nozz bruh", "oops! roadkill", "almost there", "we going too fast boi", "WOOAHH"]
+side_messages = [
+    "ZOOOM ZOOOM!",
+    "Hit the nozzz bruh",
+    "Are we there yet?",
+    "Eyes on the road",
+    "I feel the NEED... The NEED for SPEED! ",
+    "oops! roadkill",
+    "almost there",
+    "we going too fast boi",
+    "WOOAHH",
+    "all we had to do, was follow the damn train, CJ!"
+]
 
 # reads highscore from first line of the file
 with open('highscore.txt') as f:
@@ -60,8 +70,10 @@ def intro():
 
         gameDisplay.fill(bg)
         # message_display("Synthave", 65, display_width / 2, display_height / 2)
-        message_display("A driving game with chill vibes", 30, display_width/2, display_height/2 + 50)
-        message_display("Highest Score: " + highscore, 30, display_width/2, display_height/2 + 200)
+        message_display("A driving game with chill vibes", 30,
+                        display_width/2, display_height/2 + 50)
+        message_display("Highest Score: " + highscore, 30,
+                        display_width/2, display_height/2 + 200)
         # gameDisplay.blit(logo, ((display_width / 2) - 100, 10))
         gameDisplay.blit(logo, (display_width/2 - 180, 0))
 
@@ -82,8 +94,10 @@ def intro():
                 pygame.quit()
                 quit()
 
-        message_display("Vroom Now", 40, menu1_x + 70 + menu1_width/2, menu1_y + menu_height/2)
-        message_display("Run Away", 40, menu2_x + 30 + menu2_width/2, menu2_y + menu_height/2)
+        message_display("Vroom Now", 40, menu1_x + 70 +
+                        menu1_width/2, menu1_y + menu_height/2)
+        message_display("Run Away", 40, menu2_x + 30 +
+                        menu2_width/2, menu2_y + menu_height/2)
 
         pygame.display.update()
         clock.tick(60)
@@ -95,18 +109,21 @@ def curr_score(count):
     font = pygame.font.SysFont("Arial", 40)
     text = font.render("Score : " + str(count), True, white)
     gameDisplay.blit(text, (0, 0))
-    level = count/1000 + 1
+    level = count // 1000 + 1
 
     if level == 1:
         message_display("Level 1", 60, 680, 100)
         pygame.display.update()
 
     else:
-        message_display("Level "+str(level), 60, display_width - 120, 100)
-        message_display(level_up_msgs[level-2], 20, 680, 160)
+        message_display(f"Level {level}", 60, display_width - 120, 100)
+        message_display(random.choice(side_messages), 20, 680, 160)
+
+    # user wins once their score is greater than 10k
     if count > 10000:
         update_highscore(count)
-        message_display("Congratulations You Won!", 60, display_width/2, display_height/2)
+        message_display("Congratulations You Won!", 60,
+                        display_width/2, display_height/2)
         pygame.display.update()
         time.sleep(2)
         intro()
@@ -134,7 +151,8 @@ def message_display(text, size, x, y):
 
 def crash(x, y):
     gameDisplay.blit(crash_img, (x, y))
-    message_display("You Crashed!", 115, display_width/2, display_height/2 - 100)
+    message_display("You Crashed!", 115, display_width /
+                    2, display_height/2 - 100)
     message_display("GAME OVER", 115, display_width/2, display_height/2 + 100)
     pygame.display.update()
     time.sleep(2)
@@ -168,14 +186,13 @@ def gameloop():
     bg_x2 = (display_width / 2) - (360 / 2)
     bg_y1 = 0
     bg_y2 = -600
-    bg_speed_change = 0
     car_x = ((display_width / 2) - (car_width / 2))
     car_y = (display_height - car_height)
     car_x_change = 0
     road_start_x = (display_width / 2) - 180
     road_end_x = (display_width / 2) + 180
 
-    thing_startx = random.randrange(road_start_x, road_end_x - car_width)
+    thing_startx = random.randint(road_start_x, road_end_x - car_width)
     thing_starty = -600
     thingw = 50
     thingh = 100
@@ -230,7 +247,7 @@ def gameloop():
         thing_starty += thing_speed
 
         if thing_starty > display_height:
-            thing_startx = random.randrange(
+            thing_startx = random.randint(
                 road_start_x, road_end_x - car_width)
             thing_starty = -200
 
@@ -244,6 +261,7 @@ def gameloop():
         if bg_y2 >= display_height:
             bg_y2 = -600
 
+        # shrink track when score is greater than 5000 - DEPRECATED
         # if count > 5000:
         #     road_start_x = (display_width/2) - 25
         #     road_end_x = (display_width/2) + 25
@@ -251,4 +269,7 @@ def gameloop():
         pygame.display.update()
         clock.tick(60)
 
-intro()
+
+if __name__ == "__main__":
+    print("\n\nWelcome To Synthwave Vroom! Vroom!")
+    intro()
